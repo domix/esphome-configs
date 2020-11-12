@@ -1,0 +1,149 @@
+esphome:
+  name: led1
+  platform: ESP32
+  board: esp-wrover-kit
+
+wifi:
+  ssid: ""
+  password: ""
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Led1 Fallback Hotspot"
+    password: ""
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+light:
+  - platform: partition
+    name: "Partition Light"
+    segments:
+      # Use first LED from the light with ID light1
+      - id: light1
+        from: 0
+        to: 9
+      # Use 10 leds from light with ID light2 starting 2nd LED
+      #- id: light2
+      #  from: 10
+      #  to: 19
+      #- id: light3
+      #  from: 20
+      #  to: 35
+  - platform: fastled_clockless
+    id: light1
+    chipset: WS2812B
+    pin: GPIO5
+    num_leds: 35
+    #rgb_order: RGB
+    #rgb_order: RBG
+    rgb_order: GRB
+    #rgb_order: GBR
+    #rgb_order: BRG
+    #rgb_order: BGR
+    name: "FastLED WS2811 Light"
+    effects:
+      - addressable_rainbow:
+      - addressable_rainbow:
+          name: Rainbow Effect With Custom Values
+          speed: 20
+          width: 30
+      - addressable_color_wipe:
+      - addressable_color_wipe:
+          name: Color Wipe Effect With Custom Values
+          colors:
+            - red: 100%
+              green: 100%
+              blue: 100%
+              num_leds: 1
+            - red: 0%
+              green: 0%
+              blue: 0%
+              num_leds: 1
+          add_led_interval: 100ms
+          reverse: False
+      - addressable_fireworks:
+      - addressable_fireworks:
+          name: Fireworks Effect With Custom Values
+          update_interval: 32ms
+          spark_probability: 10%
+          use_random_color: false
+          fade_out_rate: 120
+      - strobe:
+      - strobe:
+          name: Strobe Effect With Custom Values
+          colors:
+            - state: True
+              brightness: 100%
+              red: 100%
+              green: 90%
+              blue: 0%
+              duration: 500ms
+            - state: False
+              duration: 250ms
+            - state: True
+              brightness: 100%
+              red: 0%
+              green: 100%
+              blue: 0%
+              duration: 500ms
+      - flicker:
+      - flicker:
+          name: Flicker Effect With Custom Values
+          alpha: 95%
+          intensity: 1.5%
+      - addressable_scan:
+      - addressable_scan:
+          name: Scan Effect With Custom Values
+          move_interval: 100ms
+          scan_width: 1
+      - addressable_twinkle:
+      - addressable_twinkle:
+          name: Twinkle Effect With Custom Values
+          twinkle_probability: 5%
+          progress_interval: 4ms
+      - addressable_lambda:
+          name: "My Custom Effect"
+          update_interval: 16ms
+          lambda: |-
+            // Static variables keep their value even when
+            // stopping and starting the effect again
+            static uint16_t progress = 0;
+            // normal variables lost their value after each
+            // execution - basically after each update_interval
+            uint16_t changes = 0;
+            // To reset static when stopping and starting the effect
+            // again you can use the initial_run variables
+            if (initial_run) {
+              progress = 0;
+              it.all() = ESPColor::BLACK;
+              // optionally do a return so nothing happens until the next update_interval
+              return;
+            }
+      - addressable_lambda:
+          name: "My Custom Effect 2"
+          update_interval: 16ms
+          lambda: |-
+            // it.size() - Number of LEDs
+            // it[num] - Access the LED at index num.
+            // Set the LED at num to the given r, g, b values
+            // it[num] = ESPColor(r, g, b);
+            // Get the color at index num (ESPColor instance)
+            // it[num].get();
+            // Example: Simple color wipe
+            for (int i = it.size() - 1; i > 0; i--) {
+              it[i] = it[i - 1].get();
+            }
+            it[0] = ESPColor::random_color();
+            // Bonus: use .range() and .all() to set many LEDs without having to write a loop.
+            it.range(0, 50) = ESPColor::BLACK;
+            it.all().fade_to_black(10);
