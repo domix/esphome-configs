@@ -1,0 +1,66 @@
+esphome:
+  name: master-bedroom-test
+
+esp32:
+  board: esp-wrover-kit
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: ""
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Master-Bedroom-Test"
+    password: ""
+
+captive_portal:
+    
+
+text_sensor:
+  - platform: version
+    name: "Master Bed Room Test Version"
+    
+esp32_ble_tracker:
+
+i2c:
+  sda: 21
+  scl: 22
+  scan: True
+  id: bus_a
+
+switch:
+  - platform: restart
+    name: "Master Bed Room Test Restart"
+
+sensor:
+  - platform: xiaomi_lywsdcgq
+    mac_address: !secret master_bedroom_xiaomi_sensor_mac
+    temperature:
+      name: "Master Bed Room Test Temperature"
+    humidity:
+      name: "Master Bed Room Test Humidity"
+    battery_level:
+      name: "Master Bed Room Test Battery Level"
+  - platform: tsl2561
+    name: "Master Bed Room Test Ambient Light"
+    address: 0x39
+    update_interval: 1s
+  - platform: wifi_signal
+    name: "Master Bed Room Test WiFi Signal Sensor"
+    update_interval: 60s
+  - platform: adc
+    pin: 34
+    attenuation: 11db
+    name: "Master Bed Room Test Chip Battery Level"
+    update_interval: 5s
