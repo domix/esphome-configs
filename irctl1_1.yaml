@@ -1,0 +1,62 @@
+esphome:
+  name: irctl1
+  platform: ESP8266
+  board: nodemcuv2
+
+wifi:
+  ssid: "NETGEAR72"
+  password: "vastsea838"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Irctl1 Fallback Hotspot"
+    password: "h4deBVG5SXtj"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "vastsea838"
+
+ota:
+  password: "vastsea838"
+  
+remote_receiver:
+  pin: 
+    number: D1
+    inverted: True
+  dump: all
+
+remote_transmitter:
+  pin: D2
+  carrier_duty_percent: 50%
+  
+# Individual switches
+switch:
+  - platform: template
+    name: "Monitor 1"
+    turn_on_action:
+      remote_transmitter.transmit_nec:
+        address: 0x01FE
+        command: 0x40BF
+  - platform: template
+    name: "Monitor 2"
+    turn_on_action:
+      remote_transmitter.transmit_nec:
+        address: 0x01FE
+        command: 0x20DF
+  - platform: template
+    name: "Power Ventilador"
+    turn_on_action:
+      remote_transmitter.transmit_rc_switch_raw:
+          code: '11011000000'
+          protocol: 4
+  - platform: template
+    name: "Speed Ventilador"
+    turn_on_action:
+      remote_transmitter.transmit_rc_switch_raw:
+          code: '11011000001'
+          protocol: 4

@@ -1,0 +1,67 @@
+esphome:
+  name: espero
+  platform: ESP32
+  board: heltec_wifi_kit_32
+
+wifi:
+  ssid: "bodohouse24"
+  password: "datona54"
+#wifi:
+#  ssid: "NETGEAR72"
+#  password: "vastsea838"
+#wifi:
+#  ssid: "H198A_8820_2.4G"
+#  password: "FVtNx9d4"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Espero Fallback Hotspot"
+    password: "aHZiM2goSosH"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "vastsea838"
+
+ota:
+  password: "vastsea838"
+
+text_sensor:
+  - platform: version
+    name: "Espero Version"
+    
+esp32_ble_tracker:
+
+switch:
+  - platform: restart
+    name: "Espero Restart"
+
+sensor:
+  - platform: xiaomi_lywsdcgq
+    mac_address: "58:2D:34:33:A0:72"
+    temperature:
+      name: "Studio Temperature"
+    humidity:
+      name: "Studio Humidity"
+    battery_level:
+      name: "Studio Sensor Battery Level"
+  - platform: xiaomi_lywsdcgq
+    mac_address: "58:2D:34:33:A8:F8"
+    temperature:
+      name: "Master bedroom Temperature"
+    humidity:
+      name: "Master bedroom Humidity"
+    battery_level:
+      name: "Master bedroom Sensor Battery Level"
+  - platform: xiaomi_lywsdcgq
+    mac_address: "58:2D:34:33:98:98"
+    temperature:
+      name: "Karla's bedroom Temperature"
+    humidity:
+      name: "Karla's bedroom Humidity"
+    battery_level:
+      name: "Karla's bedroom Sensor Battery Level"
